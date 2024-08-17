@@ -1,0 +1,43 @@
+[package]
+name = "tower-surf"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.67.1"
+description = "🌊 A stateless CSRF middleware for tower."
+license = "MIT OR Apache-2.0"
+exclude = [".envrc", ".github", "cog.toml", "devenv.*", "scripts"]
+homepage = "https://quiet.camp"
+repository = "https://github.com/quiet-camp/tower-surf"
+documentation = "https://docs.rs/tower-surf"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+axum = ["dep:async-trait", "dep:axum-core"]
+
+[dependencies]
+async-trait = { version = "0.1.81", optional = true }
+axum-core = { version = "0.4.3", optional = true }
+base64 = "0.22.1"
+futures-util = "0.3.30"
+hmac = "0.12.1"
+http = "1.1.0"
+rand = "0.8.5"
+sha2 = "0.10.8"
+thiserror = "1.0.63"
+tower-cookies = "0.10.0"
+tower-layer = "0.3.3"
+tower-service = "0.3.3"
+tracing = { version = "0.1.40", features = ["log"] }
+
+[dev-dependencies]
+anyhow = "1.0.86"
+axum = "0.7.5"
+axum-test = "15.3.1"
+maud = { version = "0.26.0", features = ["axum"] }
+tokio = { version = "1.39.2", features = ["full"] }
+
+[[example]]
+name = "full"
+required-features = ["axum"]

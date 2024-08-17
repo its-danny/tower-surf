@@ -1,0 +1,24 @@
+branch_whitelist = ["main"]
+
+pre_bump_hooks = [
+  "cargo fmt --all",
+  "cargo clippy -- -D warnings",
+  "cargo test --all-features",
+  "cargo build --release",
+  "sh -c \"./scripts/set-version.sh {{version}}\"",
+]
+
+post_bump_hooks = [
+  "git push",
+  "git push origin {{version}}",
+  "cargo package",
+  "cargo publish",
+]
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "tower-surf"
+owner = "quiet-camp"
+authors = [{ signature = "Danny Tatom", username = "its-danny" }]
