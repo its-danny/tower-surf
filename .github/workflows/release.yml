@@ -22,7 +22,7 @@ jobs:
           git-user: "Mitch"
           git-user-email: "open.source@quiet.camp"
       - run: cog changelog --at ${{ steps.release.outputs.version }}
-      - run: cargo publish --dry-run
+      - run: cargo publish
       - uses: softprops/action-gh-release@v2
         with:
           body_path: CHANGELOG.md
