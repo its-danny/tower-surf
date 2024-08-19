@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.2.0](https://github.com/quiet-camp/tower-surf/compare/bd33ffd5463dea51f3453cec41d1099ca1ff3ef0..0.2.0) - 2024-08-19
+#### Features
+- use secstr to secure the secret in memory - ([bd33ffd](https://github.com/quiet-camp/tower-surf/commit/bd33ffd5463dea51f3453cec41d1099ca1ff3ef0)) - [@its-danny](https://github.com/its-danny)
+
+- - -
+
 ## [0.1.0](https://github.com/quiet-camp/tower-surf/compare/a695cefbc172f451564b364778d07aa5ef941dff..0.1.0) - 2024-08-19
 #### Continuous Integration
 - no need to publish twice - ([2fc0402](https://github.com/quiet-camp/tower-surf/commit/2fc0402ffcee7f254d32baeece3c6810d05b4cc7)) - [@its-danny](https://github.com/its-danny)

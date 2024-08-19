@@ -39,7 +39,7 @@ By default, the cookies are set to `HTTPOnly`, `SameSite: Strict`, and `Secure`.
 
 ```toml
 [dependencies]
-tower-surf = "0.1.0"
+tower-surf = "0.2.0"
 ```
 
 ## 🗝️ Usage
