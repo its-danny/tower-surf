@@ -1,11 +1,12 @@
 use std::sync::Arc;
 
 use base64::prelude::*;
-use hmac::Mac;
+use hmac::{Hmac, Mac};
 use rand::prelude::*;
+use sha2::Sha256;
 use tower_cookies::{Cookie, Cookies};
 
-use crate::{error::Error, surf::Config, HmacSha256};
+use crate::{error::Error, surf::Config};
 
 /// An extension providing a way to interact with a visitor's
 /// CSRF token.
@@ -18,7 +19,7 @@ pub struct Token {
 impl Token {
     pub(crate) fn create(&self) -> Result<(), Error> {
         let identifier: i128 = thread_rng().gen();
-        let token = self.sign(identifier.to_string())?;
+        let token = create_token(&self.config.secret, identifier.to_string())?;
 
         let cookie = Cookie::build((self.config.cookie_name(), token))
             .path("/")
@@ -42,7 +43,7 @@ impl Token {
     ///
     /// - [`Error::InvalidLength`]
     pub fn set(&self, identifier: impl Into<String>) -> Result<(), Error> {
-        let token = self.sign(identifier)?;
+        let token = create_token(&self.config.secret, identifier)?;
 
         let cookie = Cookie::build((self.config.cookie_name(), token))
             .path("/")
@@ -75,19 +76,69 @@ impl Token {
 
         self.cookies.remove(cookie);
     }
+}
 
-    fn sign(&self, identifier: impl Into<String>) -> Result<String, Error> {
-        let mut random = [0u8; 64];
-        thread_rng().fill(&mut random);
-        let random = BASE64_STANDARD.encode(random);
+type HmacSha256 = Hmac<Sha256>;
 
-        let message = format!("{}!{}", identifier.into(), random);
-        let mut mac = HmacSha256::new_from_slice(self.config.secret.as_bytes())?;
-        mac.update(message.as_bytes());
-        let result = BASE64_STANDARD.encode(mac.finalize().into_bytes());
+pub(crate) fn create_token(secret: &str, identifier: impl Into<String>) -> Result<String, Error> {
+    let random = BASE64_STANDARD.encode(get_random_value());
+    let message = format!("{}!{}", identifier.into(), random);
+    let result = sign_and_encode(secret, &message)?;
+    let token = format!("{}.{}", result, message);
 
-        let token = format!("{}.{}", result, message);
+    Ok(token)
+}
 
-        Ok(token)
+pub(crate) fn validate_token(secret: &str, cookie: &str, token: &str) -> Result<bool, Error> {
+    let mut parts = token.splitn(2, '.');
+    let received_hmac = parts.next().unwrap_or("");
+
+    let message = parts.next().unwrap_or("");
+    let expected_hmac = sign_and_encode(secret, message)?;
+
+    Ok(received_hmac == expected_hmac && cookie == token)
+}
+
+#[cfg(not(test))]
+fn get_random_value() -> [u8; 64] {
+    let mut random = [0u8; 64];
+    thread_rng().fill(&mut random);
+
+    random
+}
+
+#[cfg(test)]
+fn get_random_value() -> [u8; 64] {
+    [42u8; 64]
+}
+
+fn sign_and_encode(secret: &str, message: &str) -> Result<String, Error> {
+    let mut mac = HmacSha256::new_from_slice(secret.as_bytes())?;
+    mac.update(message.as_bytes());
+    let result = BASE64_STANDARD.encode(mac.finalize().into_bytes());
+
+    Ok(result)
+}
+
+#[cfg(test)]
+mod tests {
+    use anyhow::Result;
+
+    use super::*;
+
+    #[test]
+    fn create_token() -> Result<()> {
+        let token = super::create_token("super-secret", "identifier")?;
+
+        let parts = token.splitn(2, '.').collect::<Vec<&str>>();
+        assert_eq!(parts.len(), 2);
+
+        let message = format!("{}!{}", "identifier", BASE64_STANDARD.encode([42u8; 64]));
+        assert_eq!(parts[1], message);
+
+        let signature = sign_and_encode("super-secret", &message)?;
+        assert_eq!(parts[0], signature);
+
+        Ok(())
     }
 }

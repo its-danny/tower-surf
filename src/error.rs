@@ -1,6 +1,6 @@
 use http::StatusCode;
 
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, thiserror::Error, PartialEq)]
 pub enum Error {
     /// Maps the [`hmac::digest::InvalidLength`] error.
     #[error(transparent)]

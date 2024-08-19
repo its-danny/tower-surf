@@ -69,11 +69,6 @@
 //! [owasp-double-submit]: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#alternative-using-a-double-submit-cookie-pattern
 //! [owasp-login-csrf]: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#possible-csrf-vulnerabilities-in-login-forms
 
-use hmac::Hmac;
-use sha2::Sha256;
-
-pub(crate) type HmacSha256 = Hmac<Sha256>;
-
 pub use error::Error;
 pub use surf::Surf;
 pub use token::Token;
