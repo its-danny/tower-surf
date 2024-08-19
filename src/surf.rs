@@ -143,7 +143,7 @@ where
         let cookies = match request
             .extensions()
             .get::<Cookies>()
-            .ok_or(Error::CookiesNotFound)
+            .ok_or(Error::ExtensionNotFound("Cookies".into()))
         {
             Ok(cookies) => cookies,
             Err(err) => return Box::pin(async move { Error::make_layer_error(err) }),
@@ -155,7 +155,7 @@ where
         };
 
         if cookies.get(&self.config.cookie_name()).is_none() {
-            if let Err(err) = token.create().map_err(|_| Error::InvalidLength) {
+            if let Err(err) = token.create() {
                 return Box::pin(async move { Error::make_layer_error(err) });
             };
         }

@@ -1,11 +1,15 @@
 use http::StatusCode;
 
-#[derive(Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum Error {
-    InvalidLength,
-    CookiesNotFound,
-    ConfigNotFound,
-    TokenNotFound,
+    /// Maps the [`hmac::digest::InvalidLength`] error.
+    #[error(transparent)]
+    InvalidLength(#[from] hmac::digest::InvalidLength),
+    /// An expected extension was missing.
+    #[error("couldn't extract `{0}`. is `SurfLayer` enabled?")]
+    ExtensionNotFound(String),
+    /// The token cookie couldn't be found by the name given.
+    #[error("couldn't get cookie")]
     NoCookie,
 }
 
@@ -26,28 +30,5 @@ impl Error {
         *response.status_mut() = StatusCode::FORBIDDEN;
 
         Ok(response)
-    }
-}
-
-impl std::error::Error for Error {}
-
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Error::InvalidLength => write!(f, "invalid secret length."),
-            Error::CookiesNotFound => {
-                write!(
-                    f,
-                    "couldn't extract `Cookies`. is `CookieManagerLayer` enabled?"
-                )
-            }
-            Error::ConfigNotFound => {
-                write!(f, "couldn't extract `Config`. is `SurfLayer` enabled?")
-            }
-            Error::TokenNotFound => {
-                write!(f, "couldn't extract `SurfToken`. is `SurfLayer` enabled?")
-            }
-            Error::NoCookie => write!(f, "couldn't find cookie."),
-        }
     }
 }
