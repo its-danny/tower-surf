@@ -25,7 +25,7 @@ This crate uses the [Double Submit Cookie Pattern][owasp-double-submit] to mitig
     - As a cookie (handled by us).
     - In the header of subsequent requests (handled by you).
 - **Token validation**:
-  - For each incoming request:
+  - For each incoming request that would mutate state:
     - We extract the token from the request headers.
     - We split the token into the **signature** and the **message**.
     - We recalculate the **signature** using the **secret key** and compare them.
