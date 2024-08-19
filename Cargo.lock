@@ -811,6 +811,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
+name = "secstr"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e04f657244f605c4cf38f6de5993e8bd050c8a303f86aeabff142d5c7c113e12"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "serde"
 version = "1.0.208"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1099,6 +1108,7 @@ dependencies = [
  "http 1.1.0",
  "maud",
  "rand",
+ "secstr",
  "sha2",
  "thiserror",
  "tokio",
