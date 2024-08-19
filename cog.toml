@@ -4,8 +4,8 @@ pre_bump_hooks = [
   "cargo fmt --all",
   "cargo clippy -- -D warnings",
   "cargo test --all-features",
-  "cargo build --release",
   "sh -c \"./scripts/set-version.sh {{version}}\"",
+  "cargo build --release",
 ]
 
 post_bump_hooks = [
