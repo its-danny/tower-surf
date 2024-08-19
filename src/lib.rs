@@ -22,7 +22,7 @@
 //!
 //! ### Cookies
 //!
-//! By default the cookies are set to `HTTPOnly`, `SameSite: Strict`, and `Secure`.
+//! By default, the cookies are set to `HTTPOnly`, `SameSite: Strict`, and `Secure`.
 //!
 //! ## 🗝️ Usage
 //!
