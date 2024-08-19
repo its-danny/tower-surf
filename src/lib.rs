@@ -39,7 +39,7 @@
 //! async fn main() {
 //!     let app = Router::new()
 //!         .route("/login", get(login)).route("/logout", get(logout))
-//!             .layer(Surf::new("secret-key").secure(false));
+//!         .layer(Surf::new("secret-key").secure(false));
 //!
 //!     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 //!     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
