@@ -37,7 +37,7 @@
 //!
 //! ### With [`axum`][crate-axum]
 //!
-//! ```rust
+//! ```rust, no_run
 //! use std::net::SocketAddr;
 //!
 //! use axum::{routing::get, Router};

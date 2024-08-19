@@ -10,6 +10,9 @@ block=$(awk '/^## 🏄‍♂️ Overview$/,0' "$source")
 # Remove the NOTE block, as it's not supported by docs.rs.
 block=$(echo "$block" | awk '!/^> \[!NOTE\]/ && !/^> /')
 
+# Make sure we don't try to run doc code.
+block=$(echo "$block" | sd '^```rust$' '```rust, no_run')
+
 # Remove all existing doc comments.
 grep -v '^//!' "$destination" >"$temp"
 mv "$temp" "$destination"
