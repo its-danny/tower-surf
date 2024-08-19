@@ -37,8 +37,7 @@ impl<S> GuardService<S> {
         let mut parts = token.splitn(2, '.');
         let received_hmac = parts.next().unwrap_or("");
 
-        let mut mac =
-            HmacSha256::new_from_slice(secret.as_bytes()).map_err(|_| Error::InvalidLength)?;
+        let mut mac = HmacSha256::new_from_slice(secret.as_bytes())?;
         let message = parts.next().unwrap_or("");
         mac.update(message.as_bytes());
         let expected_hmac = BASE64_STANDARD.encode(mac.finalize().into_bytes());
@@ -84,12 +83,12 @@ where
         Box::pin(async move {
             let response = future.await?;
 
-            let config = match config.ok_or(Error::ConfigNotFound) {
+            let config = match config.ok_or(Error::ExtensionNotFound("Config".into())) {
                 Ok(config) => config,
                 Err(err) => return Error::make_layer_error(err),
             };
 
-            let cookies = match cookies.ok_or(Error::CookiesNotFound) {
+            let cookies = match cookies.ok_or(Error::ExtensionNotFound("Cookies".into())) {
                 Ok(cookies) => cookies,
                 Err(err) => return Error::make_layer_error(err),
             };

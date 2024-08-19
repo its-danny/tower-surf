@@ -16,7 +16,7 @@ where
             .extensions
             .get::<Token>()
             .cloned()
-            .ok_or(Error::TokenNotFound)
+            .ok_or(Error::ExtensionNotFound("Token".into()))
             .map_err(|err| (StatusCode::INTERNAL_SERVER_ERROR, err.to_string()))
     }
 }

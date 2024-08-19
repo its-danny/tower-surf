@@ -66,8 +66,7 @@ impl Token {
         let random = BASE64_STANDARD.encode(random);
 
         let message = format!("{}!{}", identifier.into(), random);
-        let mut mac = HmacSha256::new_from_slice(self.config.secret.as_bytes())
-            .map_err(|_| Error::InvalidLength)?;
+        let mut mac = HmacSha256::new_from_slice(self.config.secret.as_bytes())?;
         mac.update(message.as_bytes());
         let result = BASE64_STANDARD.encode(mac.finalize().into_bytes());
 
