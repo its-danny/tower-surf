@@ -3,6 +3,7 @@ use std::sync::Arc;
 use base64::prelude::*;
 use hmac::{Hmac, Mac};
 use rand::prelude::*;
+use secstr::SecStr;
 use sha2::Sha256;
 use tower_cookies::{Cookie, Cookies};
 
@@ -80,7 +81,10 @@ impl Token {
 
 type HmacSha256 = Hmac<Sha256>;
 
-pub(crate) fn create_token(secret: &str, identifier: impl Into<String>) -> Result<String, Error> {
+pub(crate) fn create_token(
+    secret: &SecStr,
+    identifier: impl Into<String>,
+) -> Result<String, Error> {
     let random = BASE64_STANDARD.encode(get_random_value());
     let message = format!("{}!{}", identifier.into(), random);
     let result = sign_and_encode(secret, &message)?;
@@ -89,7 +93,7 @@ pub(crate) fn create_token(secret: &str, identifier: impl Into<String>) -> Resul
     Ok(token)
 }
 
-pub(crate) fn validate_token(secret: &str, cookie: &str, token: &str) -> Result<bool, Error> {
+pub(crate) fn validate_token(secret: &SecStr, cookie: &str, token: &str) -> Result<bool, Error> {
     let mut parts = token.splitn(2, '.');
     let received_hmac = parts.next().unwrap_or("");
 
@@ -112,8 +116,8 @@ fn get_random_value() -> [u8; 64] {
     [42u8; 64]
 }
 
-fn sign_and_encode(secret: &str, message: &str) -> Result<String, Error> {
-    let mut mac = HmacSha256::new_from_slice(secret.as_bytes())?;
+fn sign_and_encode(secret: &SecStr, message: &str) -> Result<String, Error> {
+    let mut mac = HmacSha256::new_from_slice(secret.unsecure())?;
     mac.update(message.as_bytes());
     let result = BASE64_STANDARD.encode(mac.finalize().into_bytes());
 
@@ -128,7 +132,8 @@ mod tests {
 
     #[test]
     fn create_token() -> Result<()> {
-        let token = super::create_token("super-secret", "identifier")?;
+        let secret = SecStr::from("super-secret");
+        let token = super::create_token(&secret, "identifier")?;
 
         let parts = token.splitn(2, '.').collect::<Vec<&str>>();
         assert_eq!(parts.len(), 2);
@@ -136,7 +141,7 @@ mod tests {
         let message = format!("{}!{}", "identifier", BASE64_STANDARD.encode([42u8; 64]));
         assert_eq!(parts[1], message);
 
-        let signature = sign_and_encode("super-secret", &message)?;
+        let signature = sign_and_encode(&secret, &message)?;
         assert_eq!(parts[0], signature);
 
         Ok(())

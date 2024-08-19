@@ -1,5 +1,6 @@
 use futures_util::future::BoxFuture;
 use http::{Request, Response};
+use secstr::SecStr;
 use std::{
     sync::Arc,
     task::{Context, Poll},
@@ -15,7 +16,7 @@ use crate::{guard::GuardService, Error, Token};
 
 #[derive(Clone)]
 pub(crate) struct Config {
-    pub(crate) secret: String,
+    pub(crate) secret: SecStr,
     pub(crate) cookie_name: String,
     pub(crate) expires: Expiration,
     pub(crate) header_name: String,
@@ -50,7 +51,7 @@ impl Surf {
     pub fn new(secret: impl Into<String>) -> Self {
         Self {
             config: Config {
-                secret: secret.into(),
+                secret: SecStr::from(secret.into()),
                 cookie_name: "csrf_token".into(),
                 expires: Expiration::Session,
                 header_name: "X-CSRF-Token".into(),
