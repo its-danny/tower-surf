@@ -86,7 +86,7 @@ async fn logout(token: Token) -> StatusCode {
 ## 🥰 Thank you
 
 - I read a lot of the [tower-sessions](https://github.com/maxcountryman/tower-sessions) codebase to figure out how to make a tower project.
-- [The tokio community](https://discord.com/invite/tokio) for answering a lot of silly questions.
+- The [tokio community](https://discord.com/invite/tokio) answered a lot of silly questions.
 
 ---
 
