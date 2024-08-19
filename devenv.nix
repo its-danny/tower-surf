@@ -25,6 +25,10 @@
 
     alejandra.enable = true;
 
+    # Shell
+
+    shellcheck.enable = true;
+
     # Git
 
     cocogitto = {

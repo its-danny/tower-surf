@@ -24,11 +24,18 @@
 //!
 //! By default, the cookies are set to `HTTPOnly`, `SameSite: Strict`, and `Secure`.
 //!
+//! ## 📦 Install
+//!
+//! ```toml
+//! [dependencies]
+//! tower-surf = "0.2.0"
+//! ```
+//!
 //! ## 🗝️ Usage
 //!
 //! ### With [`axum`][crate-axum]
 //!
-//! ```rust, no_run
+//! ```rust
 //! use std::net::SocketAddr;
 //!
 //! use axum::{routing::get, Router};
@@ -62,12 +69,22 @@
 //! }
 //! ```
 //!
+//!
+//! ## 🥰 Thank you
+//!
+//! - I read a lot of the [tower-sessions](https://github.com/maxcountryman/tower-sessions) codebase to figure out how to make a tower project.
+//! - The [tokio community](https://discord.com/invite/tokio) answered a lot of silly questions.
+//!
+//! ---
+//!
+//! 🏕️ Brought to you by [Quiet Camp](https://quiet.camp).
+//!
 //! [crate-axum]: https://github.com/tokio-rs/axum
 //! [crate-rand]: https://github.com/rust-random/rand
 //! [crate-tower]: https://github.com/tower-rs/tower
+//! [examples]: https://github.com/quiet-camp/tower-surf/tree/main/examples
 //! [owasp-cryptographic-storage]: https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html
 //! [owasp-double-submit]: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#alternative-using-a-double-submit-cookie-pattern
-//! [owasp-login-csrf]: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#possible-csrf-vulnerabilities-in-login-forms
 
 pub use error::Error;
 pub use surf::Surf;
