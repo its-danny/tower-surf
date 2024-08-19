@@ -33,7 +33,7 @@ This crate uses the [Double Submit Cookie Pattern][owasp-double-submit] to mitig
 
 ### Cookies
 
-By default the cookies are set to `HTTPOnly`, `SameSite: Strict`, and `Secure`.
+By default, the cookies are set to `HTTPOnly`, `SameSite: Strict`, and `Secure`.
 
 ## 📦 Install
 
