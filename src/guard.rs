@@ -1,6 +1,4 @@
-use base64::prelude::*;
 use futures_util::future::BoxFuture;
-use hmac::Mac;
 use http::{Method, Request, Response};
 use std::{
     sync::Arc,
@@ -10,7 +8,7 @@ use tower_cookies::Cookies;
 use tower_layer::Layer;
 use tower_service::Service;
 
-use crate::{surf::Config, Error, HmacSha256};
+use crate::{surf::Config, token::validate_token, Error};
 
 #[derive(Clone, Default)]
 pub struct Guard;
@@ -31,18 +29,6 @@ pub struct GuardService<S> {
 impl<S> GuardService<S> {
     pub(crate) fn new(inner: S) -> Self {
         Self { inner }
-    }
-
-    pub(crate) fn validate(secret: &str, cookie: &str, token: &str) -> Result<bool, Error> {
-        let mut parts = token.splitn(2, '.');
-        let received_hmac = parts.next().unwrap_or("");
-
-        let mut mac = HmacSha256::new_from_slice(secret.as_bytes())?;
-        let message = parts.next().unwrap_or("");
-        mac.update(message.as_bytes());
-        let expected_hmac = BASE64_STANDARD.encode(mac.finalize().into_bytes());
-
-        Ok(received_hmac == expected_hmac && cookie == token)
     }
 }
 
@@ -106,7 +92,7 @@ where
                 None => return Error::make_layer_forbidden(),
             };
 
-            match GuardService::<S>::validate(&config.secret, &cookie_value, &header_value) {
+            match validate_token(&config.secret, &cookie_value, &header_value) {
                 Ok(valid) => {
                     if valid {
                         Ok(response)
