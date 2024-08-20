@@ -20,8 +20,6 @@ jobs:
         uses: oknozor/cocogitto-action@v3
         with:
           release: true
-          git-user: "Mitch"
-          git-user-email: "open.source@quiet.camp"
       - run: cog changelog --at ${{ steps.release.outputs.version }}
       - uses: softprops/action-gh-release@v2
         with:

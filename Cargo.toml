@@ -6,8 +6,7 @@ rust-version = "1.67.1"
 description = "🌊 A stateless CSRF middleware for tower."
 license = "MIT OR Apache-2.0"
 exclude = [".envrc", ".github", "cog.toml", "devenv.*", "scripts"]
-homepage = "https://quiet.camp"
-repository = "https://github.com/quiet-camp/tower-surf"
+repository = "https://github.com/its-danny/tower-surf"
 documentation = "https://docs.rs/tower-surf"
 
 [package.metadata.docs.rs]
