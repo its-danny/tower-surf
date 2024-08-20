@@ -1,5 +1,5 @@
 use futures_util::future::BoxFuture;
-use http::{Request, Response};
+use http::{HeaderValue, Request, Response};
 use secstr::SecStr;
 use std::{
     sync::Arc,
@@ -20,8 +20,10 @@ pub(crate) struct Config {
     pub(crate) cookie_name: String,
     pub(crate) expires: Expiration,
     pub(crate) header_name: String,
+    pub(crate) hsts: bool,
     pub(crate) http_only: bool,
     pub(crate) prefix: bool,
+    pub(crate) preload: bool,
     pub(crate) same_site: SameSite,
     pub(crate) secure: bool,
 }
@@ -55,8 +57,10 @@ impl Surf {
                 cookie_name: "csrf_token".into(),
                 expires: Expiration::Session,
                 header_name: "X-CSRF-Token".into(),
+                hsts: true,
                 http_only: true,
                 prefix: true,
+                preload: false,
                 same_site: SameSite::Strict,
                 secure: true,
             },
@@ -86,6 +90,15 @@ impl Surf {
         self
     }
 
+    /// Sets whether to send the `Strict-Transport-Security` header.
+    ///
+    /// See: [HTTP Strict Transport Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html)
+    pub fn hsts(mut self, hsts: bool) -> Self {
+        self.config.hsts = hsts;
+
+        self
+    }
+
     /// Sets the `HTTPOnly` attribute of the cookie. The default value is `true`.
     ///
     /// ⚠️ **Warning**: This should generally _not_ be set to false.
@@ -102,6 +115,15 @@ impl Surf {
     /// See: [Cookie Name](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#cookie-namecookie-value).
     pub fn prefix(mut self, prefix: bool) -> Self {
         self.config.prefix = prefix;
+
+        self
+    }
+
+    /// Sets whether to append the [hsts](`Surf::hsts`) header with `preload`.
+    ///
+    /// See: [HTTP Strict Transport Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html)
+    pub fn preload(mut self, preload: bool) -> Self {
+        self.config.preload = preload;
 
         self
     }
@@ -182,6 +204,33 @@ where
         request.extensions_mut().insert(self.config.clone());
         request.extensions_mut().insert(token);
 
-        Box::pin(self.inner.call(request))
+        let config = self.config.clone();
+
+        if config.hsts {
+            let future = self.inner.call(request);
+
+            Box::pin(async move {
+                let mut response = future.await?;
+
+                let mut value = "max-age=31536000; includeSubDomains".to_owned();
+
+                if config.preload {
+                    value.push_str("; preload");
+                }
+
+                let value = match HeaderValue::from_str(&value) {
+                    Ok(value) => value,
+                    Err(err) => return Error::make_layer_error(err),
+                };
+
+                response
+                    .headers_mut()
+                    .insert("Strict-Transport-Security", value);
+
+                Ok(response)
+            })
+        } else {
+            Box::pin(self.inner.call(request))
+        }
     }
 }
