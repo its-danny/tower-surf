@@ -4,7 +4,7 @@
 //!
 //! ### How it works
 //!
-//! - **Secret key**: You provide a **secret key** used to sign CSRF tokens. This token is secured by [secstr][crate-secstr] and only
+//! - **Secret key**: You provide a **secret key** used to sign CSRF tokens. This secret is secured by [secstr][crate-secstr] and only
 //! in memory as plaintext during the signing and validating processes.
 //! For more information on managing your secret key, see [OWASP's Cryptographic Storage Cheat Sheet][owasp-cryptographic-storage]).
 //! - **Token creation**:
@@ -30,7 +30,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! tower-surf = "0.2.0"
+//! tower-surf = "0.3.0"
 //! ```
 //!
 //! ## 🗝️ Usage

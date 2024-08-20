@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.3.0](https://github.com/its-danny/tower-surf/compare/8eeda3de8c0b0dc1b7e2e8f41ed8be5872451f90..0.3.0) - 2024-08-20
+#### Continuous Integration
+- ignore clippy warnings - ([ecf21a2](https://github.com/its-danny/tower-surf/commit/ecf21a2ac809367c6ad74154bd5060487cf6833e)) - [@its-danny](https://github.com/its-danny)
+- whoops, misspelled script name - ([57f1727](https://github.com/its-danny/tower-surf/commit/57f1727db5327caf37e49f8bd7674b7f570f51e2)) - [@its-danny](https://github.com/its-danny)
+- allow clippy warnings for now - ([ffa36ac](https://github.com/its-danny/tower-surf/commit/ffa36ac9f8e91c7ac6e823db20f3dff4e17263fe)) - [@its-danny](https://github.com/its-danny)
+- add script to update lib.rs from readme - ([5b1c611](https://github.com/its-danny/tower-surf/commit/5b1c6115ee8a9f92f154aaf8099501c6a03ee603)) - [@its-danny](https://github.com/its-danny)
+- fix release workflow - ([8eeda3d](https://github.com/its-danny/tower-surf/commit/8eeda3de8c0b0dc1b7e2e8f41ed8be5872451f90)) - [@its-danny](https://github.com/its-danny)
+#### Documentation
+- fix typo in readme - ([53db220](https://github.com/its-danny/tower-surf/commit/53db220aa590665c91c7c256b9cf234753f73101)) - [@its-danny](https://github.com/its-danny)
+- script should add no_run to code blocks - ([e34ece1](https://github.com/its-danny/tower-surf/commit/e34ece1e18bc92cda2cc210def12f2324dde6f63)) - [@its-danny](https://github.com/its-danny)
+- call out use of secstr - ([9adcd1f](https://github.com/its-danny/tower-surf/commit/9adcd1ff532029cc0c59bac35ff61b806d6dc8fd)) - [@its-danny](https://github.com/its-danny)
+- make clear we only validate requests that would mutate state - ([28171b8](https://github.com/its-danny/tower-surf/commit/28171b824065e9c2a73ef85a4f50546696074bf9)) - [@its-danny](https://github.com/its-danny)
+#### Features
+- add HSTS header - ([f245f66](https://github.com/its-danny/tower-surf/commit/f245f66419e973038c58393f44c04f8d44954ba5)) - [@its-danny](https://github.com/its-danny)
+#### Miscellaneous Chores
+- change ownership - ([b7733f3](https://github.com/its-danny/tower-surf/commit/b7733f3f3ab6b9eb67e2b7b41ac5663a727b3696)) - [@its-danny](https://github.com/its-danny)
+
+- - -
+
 ## [0.2.0](https://github.com/its-danny/tower-surf/compare/bd33ffd5463dea51f3453cec41d1099ca1ff3ef0..0.2.0) - 2024-08-19
 #### Features
 - use secstr to secure the secret in memory - ([bd33ffd](https://github.com/its-danny/tower-surf/commit/bd33ffd5463dea51f3453cec41d1099ca1ff3ef0)) - [@its-danny](https://github.com/its-danny)
