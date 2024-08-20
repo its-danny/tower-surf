@@ -1,10 +1,13 @@
 use http::StatusCode;
 
-#[derive(Debug, thiserror::Error, PartialEq)]
+#[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// Maps the [`hmac::digest::InvalidLength`] error.
     #[error(transparent)]
     InvalidLength(#[from] hmac::digest::InvalidLength),
+    /// Maps the [`http::header::InvalidHeaderValue`] error.
+    #[error(transparent)]
+    InvalidHeaderValue(#[from] http::header::InvalidHeaderValue),
     /// An expected extension was missing.
     #[error("couldn't extract `{0}`. is `SurfLayer` enabled?")]
     ExtensionNotFound(String),
