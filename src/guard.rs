@@ -67,8 +67,6 @@ where
         let future = self.inner.call(request);
 
         Box::pin(async move {
-            let response = future.await?;
-
             let config = match config.ok_or(Error::ExtensionNotFound("Config".into())) {
                 Ok(config) => config,
                 Err(err) => return Error::make_layer_error(err),
@@ -95,6 +93,8 @@ where
             match validate_token(&config.secret, &cookie_value, &header_value) {
                 Ok(valid) => {
                     if valid {
+                        let response = future.await?;
+
                         Ok(response)
                     } else {
                         Error::make_layer_forbidden()
